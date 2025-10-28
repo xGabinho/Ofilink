@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Ofilink</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0A2647 0%, #144272 50%, #2C74B3 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0A2647;
+            color: #FFFFFF;
+            padding: 30px 30px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 12px;
+            color: #E0E0E0;
+            font-weight: 300;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .welcome-text h2 {
+            color: #0A2647;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .welcome-text p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .success-message {
+            background: #2ecc71;
+            color: #FFFFFF;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: #0A2647;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #2C74B3;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #FFFFFF;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2C74B3;
+            box-shadow: 0 0 0 3px rgba(44, 116, 179, 0.1);
+        }
+
+        input:hover:not(:focus) {
+            border-color: #2C74B3;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        input.error {
+            border-color: #e74c3c;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #2C74B3;
+        }
+
+        .remember-me label {
+            margin: 0;
+            font-weight: 400;
+            font-size: 13px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .forgot-password {
+            color: #2C74B3;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .forgot-password:hover {
+            color: #205295;
+            text-decoration: underline;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: #2C74B3;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #205295;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 116, 179, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 22px 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 43%;
+            height: 1px;
+            background: #E0E0E0;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .divider span {
+            background: #FFFFFF;
+            padding: 0 12px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .register-link {
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .register-link a {
+            color: #2C74B3;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #205295;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .container {
+                border-radius: 16px;
+            }
+
+            .header {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .logo {
+                font-size: 32px;
+            }
+
+            .form-container {
+                padding: 25px 20px;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .forgot-password {
+                align-self: flex-end;
+            }
+        }
+
+        @media (max-height: 700px) {
+            body {
+                padding: 20px;
+                align-items: flex-start;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .logo {
+                font-size: 30px;
+                margin-bottom: 6px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .welcome-text {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🔗</div>
+            <h1>Ofilink</h1>
+            <p>Conectando personas y servicios</p>
+        </div>
+
+        <div class="form-container">
+            <div class="welcome-text">
+                <h2>¡Bienvenido de nuevo!</h2>
+                <p>Ingresa tus datos para continuar</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✅ Inicio de sesión exitoso
+            </div>
+
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="ejemplo@correo.com"
+                            autocomplete="email"
+                        >
+                        <span class="input-icon">📧</span>
+                    </div>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Ingresa tu contraseña"
+                            autocomplete="current-password"
+                        >
+                        <span class="input-icon">🔒</span>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="remember-forgot">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Recordarme</label>
+                    </div>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">Iniciar Sesión</button>
+            </form>
+
+            <div class="divider">
+                <span>O</span>
+            </div>
+
+            <div class="register-link">
+                ¿No tienes cuenta? <a href="#" id="registerLink">Regístrate aquí</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const successMessage = document.getElementById('successMessage');
+        const registerLink = document.getElementById('registerLink');
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const field = document.getElementById(fieldId);
+            
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            field.classList.add('error');
+        }
+
+        function clearError(fieldId) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const field = document.getElementById(fieldId);
+            
+            errorElement.classList.remove('show');
+            field.classList.remove('error');
+        }
+
+        function clearAllErrors() {
+            const errorMessages = document.querySelectorAll('.error-message');
+            const errorFields = document.querySelectorAll('.error');
+            
+            errorMessages.forEach(msg => msg.classList.remove('show'));
+            errorFields.forEach(field => field.classList.remove('error'));
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            clearAllErrors();
+            successMessage.classList.remove('show');
+            
+            let isValid = true;
+
+            const email = document.getElementById('email').value.trim();
+            if (email === '') {
+                showError('email', 'El correo electrónico es obligatorio');
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                showError('email', 'Por favor ingresa un correo electrónico válido');
+                isValid = false;
+            }
+
+            const password = document.getElementById('password').value;
+            if (password === '') {
+                showError('password', 'La contraseña es obligatoria');
+                isValid = false;
+            }
+
+            if (isValid) {
+                successMessage.classList.add('show');
+                
+                const remember = document.getElementById('remember').checked;
+                if (remember) {
+                    console.log('Usuario desea ser recordado');
+                }
+                
+                setTimeout(() => {
+                    console.log('Redirigiendo al dashboard...');
+                }, 1500);
+            }
+        });
+
+        const inputs = form.querySelectorAll('input[type="email"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.id) {
+                    clearError(this.id);
+                }
+            });
+        });
+
+        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Función de recuperación de contraseña - En desarrollo');
+        });
+
+        registerLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Redirigiendo al formulario de registro...');
+        });
+    </script>
+</body>
+</html>

@@ -411,7 +411,7 @@
             </div>
 
             <div class="register-link">
-                ¿No tienes cuenta? <a href="#" id="registerLink">Regístrate aquí</a>
+                ¿No tienes cuenta? <a href="{{ url_for('registro') }}" id="registerLink">Regístrate aquí</a>
             </div>
         </div>
     </div>
@@ -505,6 +505,7 @@
         registerLink.addEventListener('click', function(e) {
             e.preventDefault();
             alert('Redirigiendo al formulario de registro...');
+            window.location.href = "{{ url_for('registro') }}";
         });
     </script>
 </body>

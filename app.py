@@ -1,6 +1,6 @@
-from flask import Flask, request, render_template, flash
+from flask import Flask, request, render_template, flash, redirect, url_for, session
 from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import os, re, json
 
 app = Flask(__name__)
@@ -31,9 +31,14 @@ def save_user(data):
         f.seek(0)
         json.dump(users, f, ensure_ascii=False, indent=2)
         f.truncate()
+@app.route('/')
+def home():
+    """Redirige al login al abrir la app"""
+    return redirect(url_for('login'))
 
-@app.route('/', methods=['GET', 'POST'])
-def register():
+
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
     if request.method == 'POST':
         # Obtener los campos según los name del HTML
         full_name = request.form.get('fullName', '').strip()
@@ -99,9 +104,55 @@ def register():
         }
         save_user(user_data)
         flash('✅ Registro exitoso. ¡Bienvenido(a) a Ofilink!', 'success')
-        return render_template('registro.html')
+        return redirect(url_for('login'))
 
     return render_template('registro.html')
+# Fin del codigo Registrar
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Muestra el login y valida las credenciales"""
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
+
+        if not email or not password:
+            flash('Por favor ingresa tu correo y contraseña.', 'error')
+            return render_template('login.html')
+
+        try:
+            with open(USERS_DB, 'r', encoding='utf-8') as f:
+                users = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            users = []
+
+        user = next((u for u in users if u['email'] == email), None)
+        if user and check_password_hash(user['password_hash'], password):
+            session['user'] = user['full_name']
+            flash(f'✅ Bienvenido(a), {user["full_name"]}', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Correo o contraseña incorrectos.', 'error')
+
+    return render_template('login.html')
+
+
+@app.route('/dashboard')
+def dashboard():
+    """Página después del login"""
+    if 'user' not in session:
+        flash('Debes iniciar sesión primero.', 'error')
+        return redirect(url_for('login'))
+    return f"<h1>Bienvenido, {session['user']} 👋</h1><p><a href='/logout'>Cerrar sesión</a></p>"
+
+
+@app.route('/logout')
+def logout():
+    """Cierra la sesión"""
+    session.clear()
+    flash('Sesión cerrada correctamente.', 'success')
+    return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+# Fin del codigo del Login
